@@ -17,7 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicStatusLine;
 import org.apache.http.util.EntityUtils;
 
-public class MdsApiImpl implements MdsApi {
+public class MdsApiImpl extends MdsApi {
 
     public final static String MDS_URL = "https://mds.datacite.org";
 
@@ -25,6 +25,7 @@ public class MdsApiImpl implements MdsApi {
 
     DefaultHttpClient httpClient = new DefaultHttpClient();
 
+    @Override
     public StatusLine mintDoi(String doi, String url) throws HttpException {
         try {
             HttpPost post = new HttpPost(MDS_URL + "/doi?" + getTestModeParam());
@@ -66,11 +67,13 @@ public class MdsApiImpl implements MdsApi {
         return statusLine;
     }
 
+    @Override
     public StatusLine uploadMetadata(byte[] xml) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public void setCredentials(String symbol, String password) throws HttpException {
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(symbol, password);
         AuthScope authScope = new AuthScope(null, -1);
@@ -78,13 +81,14 @@ public class MdsApiImpl implements MdsApi {
         testCredentials();
     }
 
-    public void testCredentials() throws HttpException {
+    private void testCredentials() throws HttpException {
         HttpGet get = new HttpGet(MDS_URL + "/doi");
         StatusLine status = execute(get);
         if (status.getStatusCode() == 401)
-            throw new AuthenticationException();
+            throw new AuthenticationException("unable to authenticate");
     }
 
+    @Override
     public void setTestMode(boolean testMode) {
         this.testMode = testMode;
     }
