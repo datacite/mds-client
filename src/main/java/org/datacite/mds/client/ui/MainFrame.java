@@ -65,6 +65,7 @@ public class MainFrame extends JFrame {
         splitPane_1 = new JSplitPane();
         splitPane_1.setResizeWeight(0.5);
         splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+        splitPane_1.setBorder(null);
         contentPane.add(splitPane_1);
 
         JPanel controlPanel = new JPanel();
