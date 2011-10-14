@@ -2,6 +2,7 @@ package org.datacite.mds.client.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,9 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
 
 public class MainFrame extends JFrame {
 
@@ -34,7 +38,10 @@ public class MainFrame extends JFrame {
     private Worker worker;
     private JSplitPane splitPane_1;
     private JTabbedPane tabbedPane;
-
+    private JProgressBar progressBar;
+    private LogPanel logPanel;
+    private JButton btnExecute;
+    private JButton btnAbort;
     /**
      * Launch the application.
      */
@@ -57,6 +64,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 450, 300);
+        setMinimumSize(new Dimension(500, 400));
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -74,27 +82,68 @@ public class MainFrame extends JFrame {
 
         JPanel panel_1 = new JPanel();
         controlPanel.add(panel_1, BorderLayout.NORTH);
-        panel_1.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("141px:grow"),
-                FormFactory.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("max(30dlu;pref)"),
-                FormFactory.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("max(30dlu;pref)"), },
-                new RowSpec[] { FormFactory.PREF_ROWSPEC, }));
+        panel_1.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("max(30dlu;pref)"),
+                FormFactory.RELATED_GAP_COLSPEC, ColumnSpec.decode("max(30dlu;pref)"), FormFactory.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("max(30dlu;pref):grow"), FormFactory.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("max(30dlu;pref)"), }, new RowSpec[] { FormFactory.RELATED_GAP_ROWSPEC,
+                FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
+                FormFactory.RELATED_GAP_ROWSPEC, }));
 
-        final JProgressBar progressBar = new JProgressBar();
-        panel_1.add(progressBar, "1, 1, fill, fill");
+        JButton btnLogin = new JButton("Login");
+        panel_1.add(btnLogin, "1, 2");
 
-        final JButton btnStop = new JButton("Abort");
-        panel_1.add(btnStop, "5, 1, fill, fill");
-        btnStop.setEnabled(false);
-        btnStop.addActionListener(new ActionListener() {
+        JLabel lblSymbol = new JLabel("TIB.PANGAEA");
+        panel_1.add(lblSymbol, "3, 2, 5, 1, left, default");
+
+        btnExecute = new JButton("Execute");
+        panel_1.add(btnExecute, "1, 4, fill, fill");
+
+        btnExecute.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Component selectedTab = tabbedPane.getSelectedComponent();
+                if (!(selectedTab instanceof WorkerPanel))
+                    throw new IllegalAccessError("selected tab not a worker panel");
+
+                WorkerPanel workerPanel = (WorkerPanel) selectedTab;
+                worker = workerPanel.getNewWorker();
+                worker.setLogPanel(logPanel);
+                btnExecute.setEnabled(false);
+                btnAbort.setEnabled(true);
+                worker.addPropertyChangeListener(new PropertyChangeListener() {
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if (evt.getPropertyName().equals("progress")) {
+                            Integer progress = (Integer) evt.getNewValue();
+                            progressBar.setValue(progress.intValue());
+                        } else {
+                            if (worker.isDone()) {
+                                // progressBar.setValue(100);
+                                btnExecute.setEnabled(true);
+                                btnAbort.setEnabled(false);
+                            }
+                        }
+                    }
+                });
+                worker.execute();
+
+            }
+        });
+
+        JCheckBox chckbxTestMode = new JCheckBox("testMode");
+        panel_1.add(chckbxTestMode, "3, 4");
+
+        progressBar = new JProgressBar();
+        panel_1.add(progressBar, "5, 4, fill, default");
+
+        btnAbort = new JButton("Abort");
+        panel_1.add(btnAbort, "7, 4, fill, fill");
+        btnAbort.setEnabled(false);
+        btnAbort.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 worker.cancel(false);
             }
         });
 
-        final JButton btnNewButton = new JButton("Run");
-        panel_1.add(btnNewButton, "3, 1, fill, fill");
-
-        final LogPanel logPanel = new LogPanel();
+        logPanel = new LogPanel();
         controlPanel.add(logPanel, BorderLayout.CENTER);
 
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -105,36 +154,6 @@ public class MainFrame extends JFrame {
 
         JPanel dummyPanel = new DummyWorkerPanel();
         tabbedPane.addTab("Dummy", null, dummyPanel, null);
-
-        btnNewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Component selectedTab = tabbedPane.getSelectedComponent();
-                if (!(selectedTab instanceof WorkerPanel))
-                    throw new IllegalAccessError("selected tab not a worker panel");
-                
-                WorkerPanel workerPanel = (WorkerPanel) selectedTab;
-                worker = workerPanel.getNewWorker();
-                worker.setLogPanel(logPanel);
-                btnNewButton.setEnabled(false);
-                btnStop.setEnabled(true);
-                worker.addPropertyChangeListener(new PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if (evt.getPropertyName().equals("progress")) {
-                            Integer progress = (Integer) evt.getNewValue();
-                            progressBar.setValue(progress.intValue());
-                        } else {
-                            if (worker.isDone()) {
-//                                progressBar.setValue(100);
-                                btnNewButton.setEnabled(true);
-                                btnStop.setEnabled(false);
-                            }
-                        }
-                    }
-                });
-                worker.execute();
-
-            }
-        });
 
     }
 }
