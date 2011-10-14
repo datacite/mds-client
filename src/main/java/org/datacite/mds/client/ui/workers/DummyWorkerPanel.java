@@ -1,5 +1,8 @@
 package org.datacite.mds.client.ui.workers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JPanel;
 
 
@@ -13,19 +16,19 @@ public class DummyWorkerPanel extends WorkerPanel {
 
     @Override
     public Worker getNewWorker() {
-        return new Worker() {
+        Worker<Integer> worker = new Worker<Integer>("Dummy Worker") {
             @Override
-            protected Void doInBackground() throws Exception {
-                for (int i = 0; !isCancelled() && i < 100000000; i++) {
-                    int progess = (int) (i / 1000000);
-                    setProgress(progess);
-                    if (i % 100000 == 0) {
-                        log(String.valueOf(i));
-                    }
-                    Math.sqrt(i % 50);
+            void doInBackground(Integer i) {
+                if (i.longValue() % 10 == 0) {
+                    log(String.valueOf(i));
                 }
-                return null;
+                Math.sqrt(i % 50);
             }
         };
+        List<Integer> list = new ArrayList<Integer>();
+        for (int i = 0; i < 1000; i++)
+            list.add(new Integer(i));
+        worker.setList(list);
+        return worker;
     }
 }
