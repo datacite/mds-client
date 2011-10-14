@@ -30,29 +30,7 @@ public class DoiMintingWorkerPanel extends WorkerPanel {
 
     @Override
     public Worker getNewWorker() {
-        return new Worker() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                String text = doiTextArea.getText();
-                String[] lines = StringUtils.splitByWholeSeparator(text, "\n");
-                log("==========");
-                for (String line : lines) {
-                    String[] parts = line.split(" ", 2);
-                    String doi = parts[0].trim();
-                    String url = parts.length > 1 ? parts[1].trim() : null;
-                    log("minting " + doi + " (" + url + ")");
-                    try {
-                        StatusLine status = mdsApi.mintDoi(doi, url);
-                        log(status + "\n");
-                    } catch (HttpException ex) {
-                        log("failed " + ex.getMessage());
-                    }
-                }
-                return null;
-            }
-            
-        };
-        
+        return new DoiMintingWorker(doiTextArea);
     }
     
 }
