@@ -22,7 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.datacite.mds.client.service.MdsApi;
 import org.datacite.mds.client.ui.workers.DoiMintingWorkerPanel;
-import org.datacite.mds.client.ui.workers.DummyWorkerPanel;
+import org.datacite.mds.client.ui.workers.DummyWorker;
 import org.datacite.mds.client.ui.workers.UploadMetadataWorkerPanel;
 import org.datacite.mds.client.ui.workers.Worker;
 import org.datacite.mds.client.ui.workers.WorkerPanel;
@@ -169,7 +169,11 @@ public class MainFrame extends JFrame {
         JPanel doiMintingPanel = new DoiMintingWorkerPanel();
         tabbedPane.addTab("Mint DOIs", null, doiMintingPanel, null);
 
-        JPanel dummyPanel = new DummyWorkerPanel();
+        JPanel dummyPanel = new WorkerPanel() {
+            public Worker getNewWorker() {
+                return new DummyWorker();
+            }
+        }; 
         tabbedPane.addTab("Dummy", null, dummyPanel, null);
 
     }
