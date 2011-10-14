@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -14,6 +16,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
@@ -73,7 +76,8 @@ public class MainFrame extends JFrame {
      * Create the frame.
      */
     public MainFrame() {
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        addWindowListener(new MyWindowListener());
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setTitle("Mds Client (version " + VERSION + ")");
         setBounds(100, 100, 450, 300);
         setMinimumSize(new Dimension(500, 500));
@@ -203,6 +207,26 @@ public class MainFrame extends JFrame {
     private void setControlsEnabled(boolean enabled) {
         for (Component component : controlPanel.getComponents())
             component.setEnabled(enabled);
+    }
+
+    class MyWindowListener extends WindowAdapter {
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            if (worker == null || worker.isDone()) {
+                dispose();
+            } else {
+                int choice = JOptionPane.showConfirmDialog(getParent(),
+                        "Job is still running and will be aborted. Really quit?", "Job is still running",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.OK_OPTION) {
+                    worker.cancel(false);
+                    dispose();
+                }
+            }
+            ;
+        }
+
     }
 
 }
