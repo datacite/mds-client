@@ -21,7 +21,7 @@ import java.io.File;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-public class UploadMetadataWorkerPanel extends WorkerPanel {
+public class UploadMetadataPanel extends WorkerPanel {
 
     DefaultListModel listOfFiles;
     JList list;
@@ -29,7 +29,7 @@ public class UploadMetadataWorkerPanel extends WorkerPanel {
     /**
      * Create the panel.
      */
-    public UploadMetadataWorkerPanel() {
+    public UploadMetadataPanel() {
         setLayout(new BorderLayout(0, 0));
 
         final JPanel panel = new JPanel();

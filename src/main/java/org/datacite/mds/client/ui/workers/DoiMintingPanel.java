@@ -10,14 +10,14 @@ import org.apache.http.HttpException;
 import org.apache.http.StatusLine;
 import org.datacite.mds.client.service.MdsApi;
 
-public class DoiMintingWorkerPanel extends WorkerPanel {
+public class DoiMintingPanel extends WorkerPanel {
 
     JTextArea doiTextArea;
     
     /**
      * Create the panel.
      */
-    public DoiMintingWorkerPanel() {
+    public DoiMintingPanel() {
         setLayout(new BorderLayout(0, 0));
         
         JScrollPane scrollPane = new JScrollPane();

@@ -21,9 +21,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import org.datacite.mds.client.service.MdsApi;
-import org.datacite.mds.client.ui.workers.DoiMintingWorkerPanel;
+import org.datacite.mds.client.ui.workers.DoiMintingPanel;
 import org.datacite.mds.client.ui.workers.DummyWorker;
-import org.datacite.mds.client.ui.workers.UploadMetadataWorkerPanel;
+import org.datacite.mds.client.ui.workers.UploadMetadataPanel;
 import org.datacite.mds.client.ui.workers.Worker;
 import org.datacite.mds.client.ui.workers.WorkerPanel;
 
@@ -163,10 +163,10 @@ public class MainFrame extends JFrame {
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         splitPane_1.setLeftComponent(tabbedPane);
 
-        JPanel uploadMetadataPanel = new UploadMetadataWorkerPanel();
+        JPanel uploadMetadataPanel = new UploadMetadataPanel();
         tabbedPane.addTab("Upload Metadata", null, uploadMetadataPanel, null);
 
-        JPanel doiMintingPanel = new DoiMintingWorkerPanel();
+        JPanel doiMintingPanel = new DoiMintingPanel();
         tabbedPane.addTab("Mint DOIs", null, doiMintingPanel, null);
 
         JPanel dummyPanel = new WorkerPanel() {
