@@ -12,6 +12,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicStatusLine;
@@ -24,7 +25,7 @@ public class MdsApiImpl extends MdsApi {
     boolean testMode;
 
     DefaultHttpClient httpClient = new DefaultHttpClient();
-    
+
     String symbol;
 
     @Override
@@ -37,13 +38,12 @@ public class MdsApiImpl extends MdsApi {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private String getTestModeParam() {
         return "testMode=" + testMode;
     }
-    
+
     private StatusLine execute(HttpUriRequest request) throws HttpException {
         try {
             HttpResponse response = httpClient.execute(request);
@@ -53,7 +53,6 @@ public class MdsApiImpl extends MdsApi {
             throw new HttpException("Error executing request", e);
         }
     }
-    
 
     private StatusLine makeStatusLine(HttpResponse response) {
         StatusLine origStatusLine = response.getStatusLine();
@@ -63,16 +62,19 @@ public class MdsApiImpl extends MdsApi {
                 reasonPhrase += ": " + StringUtils.chomp(EntityUtils.toString(response.getEntity()));
         } catch (Exception e) {
         }
-        
+
         StatusLine statusLine = new BasicStatusLine(origStatusLine.getProtocolVersion(),
                 origStatusLine.getStatusCode(), reasonPhrase);
         return statusLine;
     }
 
     @Override
-    public StatusLine uploadMetadata(byte[] xml) {
-        // TODO Auto-generated method stub
-        return null;
+    public StatusLine uploadMetadata(byte[] xml) throws HttpException {
+        HttpPost post = new HttpPost(MDS_URL + "/metadata?" + getTestModeParam());
+        ByteArrayEntity entity = new ByteArrayEntity(xml);
+        post.setEntity(entity);
+        post.setHeader("Content-Type", "application/xml");
+        return execute(post);
     }
 
     @Override
