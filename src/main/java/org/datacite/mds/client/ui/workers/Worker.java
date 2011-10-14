@@ -44,7 +44,7 @@ public abstract class Worker<T> extends SwingWorker<Void, String> {
         log("starting job \"" + name + "\" (" + size + " elements)");
         Iterator<T> iterator = list.iterator();
         for (int i = 0; iterator.hasNext() && !isCancelled(); i++) {
-            int progress = (int) (i / size * 100); 
+            int progress = 100 * i / size; 
             setProgress(progress);
             doInBackground(iterator.next());
         }
