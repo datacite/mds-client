@@ -14,6 +14,8 @@ public abstract class MdsApi {
     
     public abstract boolean isLoggedIn();
     
+    public abstract boolean isTestMode();
+    
     public abstract String getSymbol();
     
     private static MdsApi instance;

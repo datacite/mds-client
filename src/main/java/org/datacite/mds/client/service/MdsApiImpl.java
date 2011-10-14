@@ -108,4 +108,9 @@ public class MdsApiImpl extends MdsApi {
     public boolean isLoggedIn() {
         return this.symbol != null;
     }
+
+    @Override
+    public boolean isTestMode() {
+        return this.testMode;
+    }
 }

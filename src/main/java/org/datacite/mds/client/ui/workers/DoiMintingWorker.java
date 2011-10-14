@@ -34,7 +34,8 @@ public class DoiMintingWorker extends Worker<String> {
         String[] parts = elem.split(" ", 2);
         String doi = parts[0].trim();
         String url = parts.length > 1 ? parts[1].trim() : null;
-        log("minting " + doi + " (" + url + ")");
+        String testMode = mdsApi.isTestMode()?"test ":"";
+        log(testMode + "minting " + doi + " (" + url + ")");
         try {
             StatusLine status = mdsApi.mintDoi(doi, url);
             log(status);

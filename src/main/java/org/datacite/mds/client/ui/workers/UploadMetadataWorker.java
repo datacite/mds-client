@@ -16,7 +16,8 @@ public class UploadMetadataWorker extends Worker<File> {
 
     @Override
     void doInBackground(File file) {
-        log("uploading " + file);
+        String testMode = mdsApi.isTestMode()?"test ":"";
+        log(testMode + "uploading " + file);
         try {
             byte[] xml = FileUtils.readFileToByteArray(file);
             StatusLine status = mdsApi.uploadMetadata(xml);
