@@ -47,8 +47,9 @@ public class MainFrame extends JFrame {
     private JCheckBox chckbxTestMode;
     private JPanel controlPanel;
     private JButton btnLogin;
-    
+
     private MdsApi mdsApi = MdsApi.getInstance();
+
     /**
      * Launch the application.
      */
@@ -57,6 +58,7 @@ public class MainFrame extends JFrame {
             public void run() {
                 try {
                     MainFrame frame = new MainFrame();
+                    frame.dummyMode();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -169,15 +171,23 @@ public class MainFrame extends JFrame {
         JPanel doiMintingPanel = new DoiMintingPanel();
         tabbedPane.addTab("Mint DOIs", null, doiMintingPanel, null);
 
-        JPanel dummyPanel = new WorkerPanel() {
-            public Worker getNewWorker() {
-                return new DummyWorker();
-            }
-        }; 
-        tabbedPane.addTab("Dummy", null, dummyPanel, null);
-
     }
-    
+
+    public void dummyMode() {
+        try {
+            setControlsEnabled(true);
+            btnAbort.setEnabled(false);
+            JPanel dummyPanel = new WorkerPanel() {
+                public Worker getNewWorker() {
+                    return new DummyWorker();
+                }
+            };
+            tabbedPane.addTab("Dummy", null, dummyPanel, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private boolean login() {
         JDialog loginDialog = new LoginDialog();
         loginDialog.setVisible(true);
@@ -186,10 +196,10 @@ public class MainFrame extends JFrame {
         btnAbort.setEnabled(false);
         return false;
     }
-    
+
     private void setControlsEnabled(boolean enabled) {
         for (Component component : controlPanel.getComponents())
             component.setEnabled(enabled);
     }
-    
+
 }
