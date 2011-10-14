@@ -10,8 +10,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
@@ -28,9 +30,6 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
 
 public class MainFrame extends JFrame {
 
@@ -45,6 +44,8 @@ public class MainFrame extends JFrame {
     private JButton btnAbort;
     private JLabel lblSymbol;
     private JCheckBox chckbxTestMode;
+    private JPanel controlPanel;
+    private JButton btnLogin;
     
     private MdsApi mdsApi = MdsApi.getInstance();
     /**
@@ -81,33 +82,33 @@ public class MainFrame extends JFrame {
         splitPane_1.setBorder(null);
         contentPane.add(splitPane_1);
 
-        JPanel controlPanel = new JPanel();
-        splitPane_1.setRightComponent(controlPanel);
-        controlPanel.setLayout(new BorderLayout(0, 5));
+        JPanel controlAndLogPanel = new JPanel();
+        splitPane_1.setRightComponent(controlAndLogPanel);
+        controlAndLogPanel.setLayout(new BorderLayout(0, 5));
 
-        JPanel panel_1 = new JPanel();
-        controlPanel.add(panel_1, BorderLayout.NORTH);
-        panel_1.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("max(30dlu;pref)"),
+        controlPanel = new JPanel();
+        controlAndLogPanel.add(controlPanel, BorderLayout.NORTH);
+        controlPanel.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("max(30dlu;pref)"),
                 FormFactory.RELATED_GAP_COLSPEC, ColumnSpec.decode("max(30dlu;pref)"), FormFactory.RELATED_GAP_COLSPEC,
                 ColumnSpec.decode("max(30dlu;pref):grow"), FormFactory.RELATED_GAP_COLSPEC,
                 ColumnSpec.decode("max(30dlu;pref)"), }, new RowSpec[] { FormFactory.RELATED_GAP_ROWSPEC,
                 FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
                 FormFactory.RELATED_GAP_ROWSPEC, }));
 
-        JButton btnLogin = new JButton("Login");
+        btnLogin = new JButton("Login");
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 login();
             }
         });
-        panel_1.add(btnLogin, "1, 2");
+        controlPanel.add(btnLogin, "1, 2");
 
         lblSymbol = new JLabel("");
-        panel_1.add(lblSymbol, "3, 2, 5, 1, left, default");
+        controlPanel.add(lblSymbol, "3, 2, 5, 1, left, default");
 
         btnExecute = new JButton("Execute");
         btnExecute.setEnabled(false);
-        panel_1.add(btnExecute, "1, 4, fill, fill");
+        controlPanel.add(btnExecute, "1, 4, fill, fill");
 
         btnExecute.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -119,7 +120,7 @@ public class MainFrame extends JFrame {
                 WorkerPanel workerPanel = (WorkerPanel) selectedTab;
                 worker = workerPanel.getNewWorker();
                 worker.setLogPanel(logPanel);
-                btnExecute.setEnabled(false);
+                setControlsEnabled(false);
                 btnAbort.setEnabled(true);
                 worker.addPropertyChangeListener(new PropertyChangeListener() {
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -128,8 +129,7 @@ public class MainFrame extends JFrame {
                             progressBar.setValue(progress.intValue());
                         } else {
                             if (worker.isDone()) {
-                                // progressBar.setValue(100);
-                                btnExecute.setEnabled(true);
+                                setControlsEnabled(true);
                                 btnAbort.setEnabled(false);
                             }
                         }
@@ -141,13 +141,14 @@ public class MainFrame extends JFrame {
         });
 
         chckbxTestMode = new JCheckBox("testMode");
-        panel_1.add(chckbxTestMode, "3, 4");
+        chckbxTestMode.setEnabled(false);
+        controlPanel.add(chckbxTestMode, "3, 4");
 
         progressBar = new JProgressBar();
-        panel_1.add(progressBar, "5, 4, fill, default");
+        controlPanel.add(progressBar, "5, 4, fill, default");
 
         btnAbort = new JButton("Abort");
-        panel_1.add(btnAbort, "7, 4, fill, fill");
+        controlPanel.add(btnAbort, "7, 4, fill, fill");
         btnAbort.setEnabled(false);
         btnAbort.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -156,7 +157,7 @@ public class MainFrame extends JFrame {
         });
 
         logPanel = new LogPanel();
-        controlPanel.add(logPanel, BorderLayout.CENTER);
+        controlAndLogPanel.add(logPanel, BorderLayout.CENTER);
 
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         splitPane_1.setLeftComponent(tabbedPane);
@@ -172,8 +173,15 @@ public class MainFrame extends JFrame {
     private boolean login() {
         JDialog loginDialog = new LoginDialog();
         loginDialog.setVisible(true);
-        lblSymbol.setText(mdsApi.getSymbol());
-        btnExecute.setEnabled(mdsApi.isLoggedIn());
+        setControlsEnabled(mdsApi.isLoggedIn());
+        btnLogin.setEnabled(true);
+        btnAbort.setEnabled(false);
         return false;
     }
+    
+    private void setControlsEnabled(boolean enabled) {
+        for (Component component : controlPanel.getComponents())
+            component.setEnabled(enabled);
+    }
+    
 }
