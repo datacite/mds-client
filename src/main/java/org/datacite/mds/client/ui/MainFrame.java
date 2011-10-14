@@ -202,6 +202,7 @@ public class MainFrame extends JFrame {
         setControlsEnabled(mdsApi.isLoggedIn());
         btnLogin.setEnabled(true);
         btnAbort.setEnabled(false);
+        lblSymbol.setText(mdsApi.getSymbol());
         return false;
     }
 
