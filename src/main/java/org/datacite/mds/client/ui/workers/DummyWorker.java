@@ -12,16 +12,17 @@ public class DummyWorker extends Worker<Integer> {
     public DummyWorker() {
         super("Dummy Worker");
         List<Integer> list = new ArrayList<Integer>();
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 100; i++)
             list.add(new Integer(i));
         setList(list);
     }
 
     @Override
     void doInBackground(Integer i) {
-        if (i.longValue() % 10 == 0) {
-            log(String.valueOf(i));
+        log(String.valueOf(i));
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
         }
-        Math.sqrt(i % 50);
     }
 }
