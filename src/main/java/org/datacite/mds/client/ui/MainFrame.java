@@ -34,6 +34,8 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class MainFrame extends JFrame {
 
+    public static String VERSION = "0.1";
+
     private JPanel contentPane;
 
     private Worker worker;
@@ -72,15 +74,16 @@ public class MainFrame extends JFrame {
      */
     public MainFrame() {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setTitle("Mds Client (version " + VERSION + ")");
         setBounds(100, 100, 450, 300);
-        setMinimumSize(new Dimension(500, 400));
+        setMinimumSize(new Dimension(500, 500));
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout(0, 0));
 
         splitPane_1 = new JSplitPane();
-        splitPane_1.setResizeWeight(0.5);
+        splitPane_1.setResizeWeight(0.4);
         splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
         splitPane_1.setBorder(null);
         contentPane.add(splitPane_1);
@@ -165,11 +168,11 @@ public class MainFrame extends JFrame {
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         splitPane_1.setLeftComponent(tabbedPane);
 
-        JPanel uploadMetadataPanel = new UploadMetadataPanel();
-        tabbedPane.addTab("Upload Metadata", null, uploadMetadataPanel, null);
-
         JPanel doiMintingPanel = new DoiMintingPanel();
         tabbedPane.addTab("Mint DOIs", null, doiMintingPanel, null);
+
+        JPanel uploadMetadataPanel = new UploadMetadataPanel();
+        tabbedPane.addTab("Upload Metadata", null, uploadMetadataPanel, null);
 
     }
 
