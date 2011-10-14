@@ -64,7 +64,7 @@ public class MainFrame extends JFrame {
             public void run() {
                 try {
                     MainFrame frame = new MainFrame();
-                    frame.dummyMode();
+                    //frame.dummyMode();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -184,6 +184,7 @@ public class MainFrame extends JFrame {
 
     public void dummyMode() {
         try {
+            //mdsApi.setCredentials("<symbol>", "<password>");
             setControlsEnabled(true);
             btnAbort.setEnabled(false);
             JPanel dummyPanel = new WorkerPanel() {
