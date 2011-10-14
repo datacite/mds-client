@@ -12,6 +12,10 @@ public abstract class MdsApi {
     
     public abstract StatusLine uploadMetadata(byte[] xml) throws HttpException;
     
+    public abstract boolean isLoggedIn();
+    
+    public abstract String getSymbol();
+    
     private static MdsApi instance;
     
     public static MdsApi getInstance() {

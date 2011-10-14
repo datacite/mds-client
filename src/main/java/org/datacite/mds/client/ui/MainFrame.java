@@ -18,6 +18,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+import org.datacite.mds.client.service.MdsApi;
 import org.datacite.mds.client.ui.workers.DoiMintingWorkerPanel;
 import org.datacite.mds.client.ui.workers.DummyWorkerPanel;
 import org.datacite.mds.client.ui.workers.Worker;
@@ -42,6 +43,9 @@ public class MainFrame extends JFrame {
     private LogPanel logPanel;
     private JButton btnExecute;
     private JButton btnAbort;
+    private JLabel lblSymbol;
+    
+    private MdsApi mdsApi = MdsApi.getInstance();
     /**
      * Launch the application.
      */
@@ -90,12 +94,18 @@ public class MainFrame extends JFrame {
                 FormFactory.RELATED_GAP_ROWSPEC, }));
 
         JButton btnLogin = new JButton("Login");
+        btnLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        });
         panel_1.add(btnLogin, "1, 2");
 
-        JLabel lblSymbol = new JLabel("TIB.PANGAEA");
+        lblSymbol = new JLabel("");
         panel_1.add(lblSymbol, "3, 2, 5, 1, left, default");
 
         btnExecute = new JButton("Execute");
+        btnExecute.setEnabled(false);
         panel_1.add(btnExecute, "1, 4, fill, fill");
 
         btnExecute.addActionListener(new ActionListener() {
@@ -155,5 +165,13 @@ public class MainFrame extends JFrame {
         JPanel dummyPanel = new DummyWorkerPanel();
         tabbedPane.addTab("Dummy", null, dummyPanel, null);
 
+    }
+    
+    private boolean login() {
+        JDialog loginDialog = new LoginDialog();
+        loginDialog.setVisible(true);
+        lblSymbol.setText(mdsApi.getSymbol());
+        btnExecute.setEnabled(mdsApi.isLoggedIn());
+        return false;
     }
 }

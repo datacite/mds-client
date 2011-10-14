@@ -24,6 +24,8 @@ public class MdsApiImpl extends MdsApi {
     boolean testMode;
 
     DefaultHttpClient httpClient = new DefaultHttpClient();
+    
+    String symbol;
 
     @Override
     public StatusLine mintDoi(String doi, String url) throws HttpException {
@@ -75,10 +77,12 @@ public class MdsApiImpl extends MdsApi {
 
     @Override
     public void setCredentials(String symbol, String password) throws HttpException {
+        this.symbol = null;
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(symbol, password);
         AuthScope authScope = new AuthScope(null, -1);
         httpClient.getCredentialsProvider().setCredentials(authScope, credentials);
         testCredentials();
+        this.symbol = symbol;
     }
 
     private void testCredentials() throws HttpException {
@@ -91,5 +95,15 @@ public class MdsApiImpl extends MdsApi {
     @Override
     public void setTestMode(boolean testMode) {
         this.testMode = testMode;
+    }
+
+    @Override
+    public String getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        return this.symbol != null;
     }
 }
