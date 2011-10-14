@@ -1,6 +1,8 @@
 package org.datacite.mds.client.ui.workers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JTextArea;
 
@@ -10,13 +12,21 @@ import org.apache.http.StatusLine;
 
 public class DoiMintingWorker extends Worker<String> {
     
+    public final static String BEGIN_COMMENT_CHAR = "#"; 
+    
     JTextArea doiTextArea;    
 
     public DoiMintingWorker(JTextArea doiTextArea) {
         super("Doi Minting");
         String text = doiTextArea.getText();
+        List<String> list = new ArrayList<String>();
         String[] lines = StringUtils.splitByWholeSeparator(text, "\n");
-        setList(Arrays.asList(lines));
+        for (String line : lines) {
+            line = StringUtils.trimToEmpty(line);
+            if (!line.isEmpty() && !line.startsWith(BEGIN_COMMENT_CHAR))
+                list.add(line);
+        }
+        setList(list);
     }
 
     @Override
