@@ -52,6 +52,7 @@ public class MainFrame extends JFrame {
     private JCheckBox chckbxTestMode;
     private JPanel controlPanel;
     private JButton btnLogin;
+    private JDialog loginDialog; 
 
     private MdsApi mdsApi = MdsApi.getInstance();
 
@@ -178,6 +179,7 @@ public class MainFrame extends JFrame {
         JPanel uploadMetadataPanel = new UploadMetadataPanel();
         tabbedPane.addTab("Upload Metadata", null, uploadMetadataPanel, null);
 
+        loginDialog = new LoginDialog();
     }
 
     public void dummyMode() {
@@ -196,7 +198,6 @@ public class MainFrame extends JFrame {
     }
 
     private boolean login() {
-        JDialog loginDialog = new LoginDialog();
         loginDialog.setVisible(true);
         setControlsEnabled(mdsApi.isLoggedIn());
         btnLogin.setEnabled(true);

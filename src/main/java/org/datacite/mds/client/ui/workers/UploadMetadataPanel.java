@@ -23,6 +23,8 @@ public class UploadMetadataPanel extends WorkerPanel {
 
     DefaultListModel listOfFiles;
     JList list;
+    
+    JFileChooser fileChooser;    
 
     /**
      * Create the panel.
@@ -44,11 +46,12 @@ public class UploadMetadataPanel extends WorkerPanel {
                 FormFactory.RELATED_GAP_ROWSPEC,
                 FormFactory.DEFAULT_ROWSPEC,}));
 
+        fileChooser = new JFileChooser();
+        fileChooser.setMultiSelectionEnabled(true);
+        
         JButton btnNewButton = new JButton("Load Files");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setMultiSelectionEnabled(true);
                 fileChooser.showOpenDialog(panel);
                 File[] files = fileChooser.getSelectedFiles();
                 for (File file : files)
