@@ -1,6 +1,7 @@
 package org.datacite.mds.client.ui.workers;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -19,6 +20,7 @@ public class DoiMintingPanel extends WorkerPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         doiTextArea = new JTextArea();
+        doiTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         StringBuilder text = new StringBuilder();
         text.append("# simple enter one space seperated DOI URL pair per line:\n");
         text.append("#   10.5072/test  http://example.com\n");

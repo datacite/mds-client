@@ -1,9 +1,11 @@
 package org.datacite.mds.client.ui;
 
-import javax.swing.JPanel;
+import java.awt.Font;
 import java.awt.GridLayout;
-import javax.swing.JTextArea;
+
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class LogPanel extends JPanel {
 
@@ -19,6 +21,7 @@ public class LogPanel extends JPanel {
         add(scrollPane);
 
         logArea = new JTextArea();
+        logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         logArea.setEditable(false);
         scrollPane.setViewportView(logArea);
 
