@@ -1,25 +1,23 @@
 package org.datacite.mds.client.ui.workers;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import javax.swing.JButton;
-
-import org.datacite.mds.client.ui.LoginDialog;
-
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.RowSpec;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 public class UploadMetadataPanel extends WorkerPanel {
 
@@ -86,10 +84,13 @@ public class UploadMetadataPanel extends WorkerPanel {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Worker getNewWorker() {
-        // TODO Auto-generated method stub
-        return null;
+        UploadMetadataWorker worker = new UploadMetadataWorker();
+        List<File> files = (List<File>) Collections.list(listOfFiles.elements());
+        worker.setList(files);
+        return worker;
     }
 
 }

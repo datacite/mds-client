@@ -1,15 +1,12 @@
 package org.datacite.mds.client.ui.workers;
 
-import java.awt.BorderLayout;
 import java.util.Arrays;
 
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.StatusLine;
-import org.datacite.mds.client.service.MdsApi;
 
 public class DoiMintingWorker extends Worker<String> {
     
@@ -30,11 +27,11 @@ public class DoiMintingWorker extends Worker<String> {
         log("minting " + doi + " (" + url + ")");
         try {
             StatusLine status = mdsApi.mintDoi(doi, url);
-            log(status + "\n");
+            log(status);
         } catch (HttpException ex) {
             log("failed " + ex.getMessage());
         }
-        
+        log("");
     }
     
 }
