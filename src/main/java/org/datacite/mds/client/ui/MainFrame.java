@@ -44,6 +44,7 @@ public class MainFrame extends JFrame {
     private JButton btnExecute;
     private JButton btnAbort;
     private JLabel lblSymbol;
+    private JCheckBox chckbxTestMode;
     
     private MdsApi mdsApi = MdsApi.getInstance();
     /**
@@ -110,6 +111,7 @@ public class MainFrame extends JFrame {
 
         btnExecute.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                mdsApi.setTestMode(chckbxTestMode.isSelected());
                 Component selectedTab = tabbedPane.getSelectedComponent();
                 if (!(selectedTab instanceof WorkerPanel))
                     throw new IllegalAccessError("selected tab not a worker panel");
@@ -138,7 +140,7 @@ public class MainFrame extends JFrame {
             }
         });
 
-        JCheckBox chckbxTestMode = new JCheckBox("testMode");
+        chckbxTestMode = new JCheckBox("testMode");
         panel_1.add(chckbxTestMode, "3, 4");
 
         progressBar = new JProgressBar();

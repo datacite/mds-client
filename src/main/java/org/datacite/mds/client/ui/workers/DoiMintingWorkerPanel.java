@@ -36,7 +36,6 @@ public class DoiMintingWorkerPanel extends WorkerPanel {
                 String text = doiTextArea.getText();
                 String[] lines = StringUtils.splitByWholeSeparator(text, "\n");
                 log("==========");
-                mdsApi.setTestMode(true);
                 for (String line : lines) {
                     String[] parts = line.split(" ", 2);
                     String doi = parts[0].trim();
