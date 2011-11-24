@@ -37,7 +37,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class MainFrame extends JFrame {
 
-    public static String VERSION = "0.1";
+    public static String VERSION = "0.2";
 
     private JPanel contentPane;
 
