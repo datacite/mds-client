@@ -17,13 +17,18 @@ public class UploadMetadataWorker extends Worker<File> {
     }
 
     @Override
-    void doInBackground(File file) throws IOException, HttpException {
+    void doInBackground(File file) throws Exception {
         String testMode = mdsApi.isTestMode() ? "test " : "";
+        log("");
         log(testMode + "uploading " + file);
         byte[] xml = FileUtils.readFileToByteArray(file);
         StatusLine status = mdsApi.uploadMetadata(xml);
-        log(status);
-        log("");
+        
+        if (status.getStatusCode() == 201)
+            log(status);
+        else
+            throw new Exception(status.toString());
+
     }
 
 }

@@ -30,15 +30,19 @@ public class DoiMintingWorker extends Worker<String> {
     }
 
     @Override
-    void doInBackground(String elem) throws HttpException {
+    void doInBackground(String elem) throws Exception {
         String[] parts = elem.split(" ", 2);
         String doi = parts[0].trim();
         String url = parts.length > 1 ? parts[1].trim() : null;
         String testMode = mdsApi.isTestMode()?"test ":"";
+        log("");
         log(testMode + "minting " + doi + " (" + url + ")");
 
         StatusLine status = mdsApi.mintDoi(doi, url);
-        log(status);
-        log("");
+
+        if (status.getStatusCode() == 201)
+            log(status);
+        else
+            throw new Exception(status.toString());
     }
 }

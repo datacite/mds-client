@@ -61,6 +61,7 @@ public abstract class Worker<T> extends SwingWorker<Void, String> {
     @Override
     protected void done() {
         // TODO Auto-generated method stub
+        log("");
         if (isCancelled()) {
             log("job was cancelled");
         } else {
