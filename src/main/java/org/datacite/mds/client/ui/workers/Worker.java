@@ -38,7 +38,7 @@ public abstract class Worker<T> extends SwingWorker<Void, String> {
     }
     
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void doInBackground() {
         int size = list.size();
         log("==========");
         log("starting job \"" + name + "\" (" + size + " elements)");
@@ -47,12 +47,16 @@ public abstract class Worker<T> extends SwingWorker<Void, String> {
         for (int i = 0; iterator.hasNext() && !isCancelled(); i++) {
             int progress = 100 * i / size; 
             setProgress(progress);
-            doInBackground(iterator.next());
+            try {
+                doInBackground(iterator.next());
+            } catch (Exception e) {
+                log("failed: " + e.getMessage());
+            }
         }
         return null;
     }
     
-    abstract void doInBackground(T elem);
+    abstract void doInBackground(T elem) throws Exception ;
 
     @Override
     protected void done() {

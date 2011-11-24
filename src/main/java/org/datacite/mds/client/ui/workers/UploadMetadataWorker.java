@@ -1,13 +1,15 @@
 package org.datacite.mds.client.ui.workers;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpException;
 import org.apache.http.StatusLine;
 import org.datacite.mds.client.service.MdsApi;
 
 public class UploadMetadataWorker extends Worker<File> {
-    
+
     MdsApi mdsApi = MdsApi.getInstance();
 
     public UploadMetadataWorker() {
@@ -15,16 +17,12 @@ public class UploadMetadataWorker extends Worker<File> {
     }
 
     @Override
-    void doInBackground(File file) {
-        String testMode = mdsApi.isTestMode()?"test ":"";
+    void doInBackground(File file) throws IOException, HttpException {
+        String testMode = mdsApi.isTestMode() ? "test " : "";
         log(testMode + "uploading " + file);
-        try {
-            byte[] xml = FileUtils.readFileToByteArray(file);
-            StatusLine status = mdsApi.uploadMetadata(xml);
-            log(status);
-        } catch (Exception ex) {
-            log("failed: " + ex.getMessage());
-        }
+        byte[] xml = FileUtils.readFileToByteArray(file);
+        StatusLine status = mdsApi.uploadMetadata(xml);
+        log(status);
         log("");
     }
 
