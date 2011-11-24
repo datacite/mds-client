@@ -180,11 +180,12 @@ public class MainFrame extends JFrame {
         tabbedPane.addTab("Upload Metadata", null, uploadMetadataPanel, null);
 
         loginDialog = new LoginDialog();
+        
+        refreshUIafterLogin();
     }
 
     public void dummyMode() {
         try {
-            //mdsApi.setCredentials("<symbol>", "<password>");
             setControlsEnabled(true);
             btnAbort.setEnabled(false);
             JPanel dummyPanel = new WorkerPanel() {
@@ -200,11 +201,15 @@ public class MainFrame extends JFrame {
 
     private boolean login() {
         loginDialog.setVisible(true);
+        refreshUIafterLogin();
+        return false;
+    }
+    
+    private void refreshUIafterLogin() {
         setControlsEnabled(mdsApi.isLoggedIn());
         btnLogin.setEnabled(true);
         btnAbort.setEnabled(false);
         lblSymbol.setText(mdsApi.getSymbol());
-        return false;
     }
 
     private void setControlsEnabled(boolean enabled) {
