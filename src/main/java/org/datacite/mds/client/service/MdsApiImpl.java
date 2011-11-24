@@ -3,6 +3,7 @@ package org.datacite.mds.client.service;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -62,6 +63,10 @@ public class MdsApiImpl extends MdsApi {
                 reasonPhrase += ": " + StringUtils.chomp(EntityUtils.toString(response.getEntity()));
         } catch (Exception e) {
         }
+        
+        Header location = response.getFirstHeader("Location");
+        if (location != null)
+            reasonPhrase += " <" + location.getValue() + ">";
 
         StatusLine statusLine = new BasicStatusLine(origStatusLine.getProtocolVersion(),
                 origStatusLine.getStatusCode(), reasonPhrase);
