@@ -16,7 +16,11 @@ public abstract class Worker<T> extends SwingWorker<Void, String> {
     LogPanel logPanel;
     
     List<T> list = new ArrayList<T>();
+
     String name;
+
+    int failed = 0;
+    int succeeded = 0 ;
     
     public Worker(String name) {
         super();
@@ -47,9 +51,13 @@ public abstract class Worker<T> extends SwingWorker<Void, String> {
         for (int i = 0; iterator.hasNext() && !isCancelled(); i++) {
             int progress = 100 * i / size; 
             setProgress(progress);
+            
+            T elem = iterator.next();
             try {
-                doInBackground(iterator.next());
+                doInBackground(elem);
+                succeeded++;
             } catch (Exception e) {
+                failed++;
                 log("failed: " + e.getMessage());
             }
         }
@@ -68,6 +76,15 @@ public abstract class Worker<T> extends SwingWorker<Void, String> {
             log("job finished normally");
             setProgress(100);
         }
+        logStats();
+    }
+    
+    private void logStats() {
+        int total = list.size();
+        int processed = succeeded + failed;
+        log("processed instructions: " + processed + "/" + total);
+        log("successful: " + succeeded);
+        log("failed: " + failed);
     }
 
 }
