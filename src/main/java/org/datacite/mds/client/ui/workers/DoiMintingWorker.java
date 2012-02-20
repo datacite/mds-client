@@ -31,7 +31,7 @@ public class DoiMintingWorker extends Worker<String> {
 
     @Override
     void doInBackground(String elem) throws Exception {
-        String[] parts = elem.split(" ", 2);
+        String[] parts = elem.split("\\s+", 2);
         String doi = parts[0].trim();
         String url = parts.length > 1 ? parts[1].trim() : null;
         String testMode = mdsApi.isTestMode()?"test ":"";
